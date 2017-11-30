@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import { Provider } from 'react-redux';
 import './App.css';
-import Header from './components/Header/Header';
-import MainBlock from './components/MainBlock/MainBlock';
-import Footer from './components/Footer/Footer';
-import IndexPage from "./components/Pages/Index/Index"
-import ProductDetailed from "./components/Pages/ProductDetailed/ProductDetailed"
+import Router from './components/Router/Router';
+import reducers from './reducers';
+import epics from './epics';
+
+const epicMiddleware = createEpicMiddleware(combineEpics(...epics));
+const store = createStore(combineReducers(reducers), applyMiddleware(epicMiddleware));
 
 class App extends Component {
 	render() {
 		return (
-			<div id="tooplate_wrapper">
-				<Header/>
-				<MainBlock>
-					<IndexPage/>
-					{/*<ProductDetailed/>*/}
-				</MainBlock>
-				<Footer/>
-			</div>
+			<Provider store={store}>
+				<Router/>
+			</Provider>
 		);
 	}
 }
